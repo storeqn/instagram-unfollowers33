@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagram Unfollowers Tool</title>
+
+<style>
+body{
+  margin:0;
+  padding:16px;
+  background:#0f1115;
+  color:#fff;
+  font-family:Arial, sans-serif;
+}
+.container{
+  max-width:900px;
+  margin:auto;
+}
+.card{
+  background:#171a21;
+  border:1px solid #262a35;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:16px;
+}
+h1{margin:0 0 10px;font-size:22px}
+p{color:#c9d1d9;font-size:14px;line-height:1.6}
+label{display:block;margin:8px 0 4px}
+input,button{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid #2b3240;
+  background:#0f1115;
+  color:#fff;
+  font-size:14px;
+}
+button{
+  background:#22283a;
+  font-weight:bold;
+  cursor:pointer;
+}
+button:hover{background:#2b3350}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stats{display:none;gap:10px;flex-wrap:wrap}
+.stat{
+  background:#0f1115;
+  border:1px solid #2b3240;
+  border-radius:12px;
+  padding:10px;
+  min-width:150px;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:12px;
+  display:none;
+}
+th,td{
+  border-bottom:1px solid #2b3240;
+  padding:10px;
+  text-align:right;
+}
+th{background:#111420}
+a.open{
+  background:#2b3350;
+  padding:6px 10px;
+  border-radius:8px;
+  color:#fff;
+  text-decoration:none;
+  font-weight:bold;
+}
+.small{font-size:13px;color:#c9d1d9;margin-top:10px}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<div class="card">
+<h1>🔍 معرفة من لا يتابعك في إنستغرام</h1>
+<p>
+ارفع ملف <b>followers_1.json</b> و <b>following.json</b
+من بيانات إنستغرام، وستظهر لك الحسابات التي لا تتابعك.
+</p>
+
+<div class="row">
+  <div>
+    <label>followers_1.json</label>
+    <input type="file" id="followers" accept=".json">
+  </div>
+  <div>
+    <label>following.json</label>
+    <input type="file" id="following" accept=".json">
+  </div>
+</div>
+
+<button onclick="analyze()" style="margin-top:12px">تحليل الملفات</button>
+</div>
+
+<div class="card">
+<div class="stats" id="stats">
+  <div class="stat">المتابعين<br><b id="fc">0</b></div>
+  <div class="stat">المتابَعين<br><b id="fg">0</b></div>
+  <div class="stat">لا يتابعونك<br><b id="nf">0</b></div>
+</div>
+
+<table id="table">
+<thead>
+<tr>
+  <th>#</th>
+  <th>الحساب</th>
+  <th>فتح</th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+
+<p class="small">
+⚠️ يتم فتح الحسابات يدويًا لتجنب الحظر (آمن 100%)
+</p>
+</div>
+
+</div>
+
+<script>
+function normalize(u){
+  return String(u||"").replace(/^@/,"").toLowerCase();
+}
+
+function fromHref(h){
+  try{
+    let p=new URL(h).pathname.split("/").filter(Boolean);
+    return normalize(p[p.length-1]);
+  }catch(e){return""}
+}
+
+function extract(json){
+  let r=[];
+  (function walk(x){
+    if(!x)return;
+    if(Array.isArray(x))return x.forEach(walk);
+    if(typeof x==="object"){
+      if(x.title)r.push(normalize(x.title));
+      if(x.string_list_data)
+        x.string_list_data.forEach(s=>{
+          if(s.value)r.push(normalize(s.value));
+          if(s.href)r.push(fromHref(s.href));
+        });
+      for(let k in x)walk(x[k]);
+    }
+  })(json);
+  return [...new Set(r)].filter(Boolean);
+}
+
+function read(file){
+  return new Promise((res,rej)=>{
+    let r=new FileReader();
+    r.onload=()=>res(JSON.parse(r.result));
+    r.onerror=rej;
+    r.readAsText(file);
+  });
+}
+
+async function analyze(){
+  let f1=document.getElementById("followers").files[0];
+  let f2=document.getElementById("following").files[0];
+  if(!f1||!f2){alert("ارفع الملفين");return}
+
+  let followers=extract(await read(f1));
+  let following=extract(await read(f2));
+
+  let set=new Set(followers);
+  let nf=following.filter(u=>!set.has(u));
+
+  document.getElementById("stats").style.display="flex";
+  document.getElementById("table").style.display="table";
+  document.getElementById("fc").textContent=followers.length;
+  document.getElementById("fg").textContent=following.length;
+  document.getElementById("nf").textContent=nf.length;
+
+  let tbody=document.getElementById("tbody");
+  tbody.innerHTML="";
+  nf.forEach((u,i)=>{
+    let tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${i+1}</td>
+      <td>@${u}</td>
+      <td><a class="open" href="https://www.instagram.com/${u}/" target="_blank">فتح</a></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+</script>
+
+</body>
+</html>
