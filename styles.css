@@ -2,3 +2,7 @@
 
 /* Refined app design and method selector */
 :root{--bg:#0c0920;--panel:#18112e;--line:#483061;--pink:#ff48ad}body{background:radial-gradient(circle at 12% 2%,#6325b355,transparent 35%),radial-gradient(circle at 95% 15%,#ed269833,transparent 30%),#0c0920}.panel{background:linear-gradient(145deg,#24143b,#151025 75%);box-shadow:0 12px 45px #07030f45}.brand img{border-radius:18px;box-shadow:0 0 25px #cc2fff55}.primary{background:linear-gradient(115deg,#7038e8,#e02c9b);box-shadow:0 5px 20px #d02d8b33}.intro h1 span{background:linear-gradient(90deg,#ff83ca,#b994ff);color:transparent;background-clip:text}.method-switch{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}.method-switch button{background:#1b1431}.method-switch button.selected{background:linear-gradient(110deg,#6434bb,#b52c86);border-color:#db79c9;color:white}#linkMethod,#fileMethod{padding-top:6px}#profileUrl{direction:ltr;text-align:left}#linkMethod .note{line-height:1.8}#checkProfile{margin-top:12px}
+
+
+/* Match existing purple controls for local diagnostics and clipboard fallback. */
+#diagnostics{white-space:pre-line}#copyText{box-sizing:border-box;width:100%;background:var(--bg);color:inherit;border:1px solid var(--line);border-radius:12px;padding:12px;font:14px/1.6 monospace}details{margin-top:16px}summary{cursor:pointer;color:var(--muted)}

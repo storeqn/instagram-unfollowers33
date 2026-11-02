@@ -1,0 +1,6 @@
+{"relationships_following":[
+  {"title":"alice.one","string_list_data":[{"href":"https://www.instagram.com/_u/alice.one","timestamp":1700000000}]},
+  {"title":"bob_two","string_list_data":[{"value":"BOB_TWO","href":"https://www.instagram.com/bob_two/"}]},
+  {"title":"This Is Only A Display Name","string_list_data":[{"value":"dave._four","href":"https://www.instagram.com/_u/dave._four/","timestamp":1700000000}]},
+  {"title":"erin_five","string_list_data":[{"href":"https://www.instagram.com/erin_five/?igsh=tracking"}]}
+]}
